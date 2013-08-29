@@ -28,7 +28,7 @@ class JenkinsController < MVCLI::Controller
         f.puts "site :opscode"
         f.puts ""
         f.puts "cookbook 'runit', '>= 1.1.2'"
-        f.puts "cookbook 'jenkins', github: 'hayesmp/chef-jenkins'"
+        f.puts "cookbook 'jenkins', github: 'hayesmp/jenkins-cookbook'"
       end
       execute "bin/berks install --path cookbooks/"
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
