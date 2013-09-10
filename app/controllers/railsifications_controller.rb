@@ -10,6 +10,7 @@ class RailsificationsController < MVCLI::Controller
     command.output.puts "Setting up a chef kitchen in order to railsify your server."
     command.output.puts "This could take a while...."
     sleep(1)
+    ENV['PATH'] = "/opt/rumm/embedded/bin:#{ENV['PATH']}" if Dir.exists?('/opt/rumm/embedded/bin')
     tmpdir = Pathname(Dir.tmpdir).join 'chef_kitchen'
     FileUtils.mkdir_p tmpdir
     Dir.chdir tmpdir do
@@ -29,7 +30,7 @@ class RailsificationsController < MVCLI::Controller
       execute "bin/berks install --path cookbooks/"
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
       File.open('nodes/host.json', 'w') do |f|
-        f.puts('{"run_list":["rackbox"],"rackbox":{"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195"]}}}')
+        f.puts('{"run_list":["rackbox"],"rackbox":{"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195","1.9.3-p448"]},"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"db_root_password":"iloverandompasswordsbutthiswilldo","databases":{"postgresql":[{"database_name":"app1_production","username":"app1","password":"app1_pass"}]}}}')
       end
 
       FileUtils.rm_rf "#{server.ipv4_address}.json"
@@ -43,15 +44,29 @@ class RailsificationsController < MVCLI::Controller
   private
 
   def execute(cmd)
-    Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
-      while line = stdout.gets
-        command.output.puts "   " + line
+    bundle_clean_env {
+      Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
+        while line = stdout.gets
+          command.output.puts "   " + line
+        end
+        exit_status = wait_thr.value
+        unless exit_status.success?
+          abort "FAILED !!! #{cmd}"
+        end
       end
-      exit_status = wait_thr.value
-      unless exit_status.success?
-        abort "FAILED !!! #{cmd}"
-      end
-    end
+    }
+  end
+
+  def bundle_clean_env
+    gemfile = ENV['BUNDLE_GEMFILE']
+    bin_path = ENV['BUNDLE_BIN_PATH']
+    ENV.delete 'BUNDLE_GEMFILE'
+    ENV.delete 'BUNDLE_BIN_PATH'
+    yield
+  ensure
+    ENV['BUNDLE_GEMFILE'] = gemfile
+    ENV['BUNDLE_BIN_PATH'] = bin_path
+    true
   end
 
   def server
