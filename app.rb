@@ -1,5 +1,5 @@
 require "mvcli/app"
-require "rumm/version"
+#require "rumm/version"
 
 module Rumm
   class App < MVCLI::App
