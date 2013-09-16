@@ -10,7 +10,6 @@ class RailsificationsController < MVCLI::Controller
     command.output.puts "Setting up a chef kitchen in order to railsify your server."
     command.output.puts "This could take a while...."
     sleep(1)
-    ENV['PATH'] = "/opt/rumm/embedded/bin:#{ENV['PATH']}" if Dir.exists?('/opt/rumm/embedded/bin')
     tmpdir = Pathname(Dir.tmpdir).join 'chef_kitchen'
     FileUtils.mkdir_p tmpdir
     Dir.chdir tmpdir do
