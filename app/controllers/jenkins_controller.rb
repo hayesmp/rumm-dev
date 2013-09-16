@@ -8,7 +8,10 @@ class JenkinsController < MVCLI::Controller
   requires :command
 
   def create
-    command.output.puts "Setting up a chef kitchen in order to railsify your server."
+    template = Jenkins::CreateForm
+    argv = MVCLI::Argv.new command.argv
+    form = template.new argv.options
+    command.output.puts "Setting up a chef kitchen in order to setup jenkins on your server."
     command.output.puts "This could take a while...."
     sleep(1)
     tmpdir = Pathname(Dir.tmpdir).join 'chef_kitchen'
@@ -24,22 +27,24 @@ class JenkinsController < MVCLI::Controller
       puts ENV.inspect.to_yaml
       execute "bundle install --binstubs"
       execute "bin/knife solo init ."
+      FileUtils.rm "Berksfile"
       File.open 'Berksfile', 'w' do |f|
         f.puts "site :opscode"
         f.puts ""
         f.puts "cookbook 'runit', '>= 1.1.2'"
-        f.puts "cookbook 'jenkins', github: 'hayesmp/jenkins-cookbook'"
+        f.puts "cookbook 'rackbox', github: 'hayesmp/jenkinsbox-cookbook'"
       end
       execute "bin/berks install --path cookbooks/"
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
-      #File.open('nodes/host.json', 'w') do |f|
-      #  f.puts('{"run_list":["rackbox"],"rackbox":{"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195"]}}}')
-      #end
+      File.open('nodes/host.json', 'w') do |f|
+        f.puts("{\"run_list\":[\"rackbox\"],\"rackbox\":{\"jenkins\":{\"job\":\"#{form.job}\",\"git_repo\":\"#{form.git_repo}\",\"command\":\"#{form.command}\",\"ip_address\":\"#{server.ipv4_address}\", \"host\":\"#{server.name}\"},\"ruby\":{\"versions\":[\"2.0.0-p247\",\"1.9.3-p448\"],\"global_version\":\"2.0.0-p247\"}}}")
+        #f.puts("{\"run_list\":[\"rackbox\"],\"rackbox\":{\"jenkins\":{\"job\":\"#{form.job}\",\"git_repo\":\"#{form.git_repo}\",\"command\":\"#{form.command}\"}}}")
+      end
 
-      #FileUtils.rm_rf "#{server.ipv4_address}.json"
-      #FileUtils.mv "nodes/host.json", "nodes/#{server.ipv4_address}.json"
-
-      execute "bin/knife solo cook root@#{server.ipv4_address}"
+      FileUtils.rm_rf "#{server.ipv4_address}.json"
+      FileUtils.mv "nodes/host.json", "nodes/#{server.ipv4_address}.json"
+      #execute "hostname #{server.ipv4_address}"
+      execute "bin/knife solo cook root@#{server.ipv4_address} -VV"
     end
     return server
   end
