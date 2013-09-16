@@ -29,7 +29,7 @@ class RailsificationsController < MVCLI::Controller
       execute "bin/berks install --path cookbooks/"
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
       File.open('nodes/host.json', 'w') do |f|
-        f.puts('{"run_list":["rackbox"],"rackbox":{"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195","1.9.3-p448"]},"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"db_root_password":"iloverandompasswordsbutthiswilldo","databases":{"postgresql":[{"database_name":"app1_production","username":"app1","password":"app1_pass"}]}}}')
+        f.puts('{"run_list":["rackbox"],"rackbox":{"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195"]}}}')
       end
 
       FileUtils.rm_rf "#{server.ipv4_address}.json"
