@@ -35,13 +35,12 @@ class JenkinsController < MVCLI::Controller
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
       File.open('nodes/host.json', 'w') do |f|
         f.puts("{\"run_list\":[\"rackbox\"],\"rackbox\":{\"jenkins\":{\"job\":\"#{form.job}\",\"git_repo\":\"#{form.git_repo}\",\"command\":\"#{form.command}\",\"ip_address\":\"#{server.ipv4_address}\", \"host\":\"#{server.name}\"},\"ruby\":{\"versions\":[\"2.0.0-p247\",\"1.9.3-p448\"],\"global_version\":\"2.0.0-p247\"}}}")
-        #f.puts("{\"run_list\":[\"rackbox\"],\"rackbox\":{\"jenkins\":{\"job\":\"#{form.job}\",\"git_repo\":\"#{form.git_repo}\",\"command\":\"#{form.command}\"}}}")
       end
 
       FileUtils.rm_rf "#{server.ipv4_address}.json"
       FileUtils.mv "nodes/host.json", "nodes/#{server.ipv4_address}.json"
       #execute "hostname #{server.ipv4_address}"
-      execute "bin/knife solo cook root@#{server.ipv4_address} -VV"
+      execute "bin/knife solo cook root@#{server.ipv4_address}"
     end
     return server
   end
@@ -54,31 +53,24 @@ class JenkinsController < MVCLI::Controller
   private
 
   def execute(cmd)
-    #puts Dir.pwd
-    bundle_clean_env {
+    retried = 0
+    begin
       Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
         while line = stdout.gets
-          bundle_clean_env {} if cmd == 'bundle install --binstubs'
           command.output.puts "   " + line
         end
         exit_status = wait_thr.value
         unless exit_status.success?
-          abort "FAILED !!! #{cmd}"
+          raise "FAILED !!! #{cmd}"
         end
       end
-    }
-  end
-
-  def bundle_clean_env
-    gemfile = ENV['BUNDLE_GEMFILE']
-    bin_path = ENV['BUNDLE_BIN_PATH']
-    ENV.delete 'BUNDLE_GEMFILE'
-    ENV.delete 'BUNDLE_BIN_PATH'
-    yield
-  ensure
-    ENV['BUNDLE_GEMFILE'] = gemfile
-    ENV['BUNDLE_BIN_PATH'] = bin_path
-    true
+    rescue
+      if retried + 1 < 3
+        retried += 1
+        sleep(1)
+        retry
+      end
+    end
   end
 
   def server
