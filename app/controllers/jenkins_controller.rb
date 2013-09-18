@@ -1,6 +1,6 @@
 require "tmpdir"
 require "open3"
-require "yaml"
+require "bundler"
 
 class JenkinsController < MVCLI::Controller
   requires :compute
@@ -22,10 +22,7 @@ class JenkinsController < MVCLI::Controller
         f.puts 'gem "knife-solo", ">= 0.3.0pre3"'
         f.puts 'gem "berkshelf"'
       end
-      #execute "bundle --system"
-      #puts Dir.pwd
-      puts ENV.inspect.to_yaml
-      execute "bundle install --binstubs"
+      Bundler.with_clean_env { execute "bundle install --binstubs" }
       execute "bin/knife solo init ."
       FileUtils.rm "Berksfile"
       File.open 'Berksfile', 'w' do |f|
