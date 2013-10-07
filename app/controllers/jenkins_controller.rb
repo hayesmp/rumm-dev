@@ -29,18 +29,19 @@ class JenkinsController < MVCLI::Controller
         f.puts "site :opscode"
         f.puts ""
         f.puts "cookbook 'runit', '>= 1.1.2'"
-        f.puts "cookbook 'rackbox', github: 'hayesmp/jenkinsbox-cookbook'"
+        #f.puts "cookbook 'rackbox', github: 'hayesmp/jenkinsbox-cookbook'"
+        f.puts "cookbook 'rackbox', github: 'hayesmp/jenkins-rackbox-cookbook'"
       end
       execute "bin/berks install --path cookbooks/"
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
       File.open('nodes/host.json', 'w') do |f|
-        f.puts("{\"run_list\":[\"rackbox\"],\"rackbox\":{\"jenkins\":{\"job\":\"#{form.job}\",\"git_repo\":\"#{form.git_repo}\",\"command\":\"#{form.command}\",\"ip_address\":\"#{server.ipv4_address}\", \"host\":\"#{server.name}\"},\"ruby\":{\"versions\":[\"2.0.0-p247\",\"1.9.3-p448\"],\"global_version\":\"2.0.0-p247\"}}}")
+        f.puts("{\"run_list\":[\"recipe[build-essential]\",\"recipe[rackbox::postgresql]\",\"recipe[rackbox]\",\"recipe[rackbox::jenkins]\"],\"rackbox\":{\"build_essential\":{ \"compiletime\":true},\"jenkins\":{\"job\":\"#{form.job}\",\"git_repo\":\"#{form.git_repo}\",\"command\":\"#{form.command}\",\"ip_address\":\"#{server.ipv4_address}\", \"host\":\"#{server.name}\"},\"ruby\":{\"versions\":[\"2.0.0-p247\"],\"global_version\":\"2.0.0-p247\"},\"apps\":{\"unicorn\":[{\"appname\":\"app1\",\"hostname\":\"app1\"}]},\"db_root_password\":\"iloverandompasswordsbutthiswilldo\", \"databases\":{\"postgresql\":[{\"database_name\":\"app1_production\",\"username\":\"app1\",\"password\":\"app1_pass\"}]}}}")
       end
 
       FileUtils.rm_rf "#{server.ipv4_address}.json"
       FileUtils.mv "nodes/host.json", "nodes/#{server.ipv4_address}.json"
       #execute "hostname #{server.ipv4_address}"
-      execute "bin/knife solo cook root@#{server.ipv4_address}"
+      execute "bin/knife solo cook root@#{server.ipv4_address} -V"
     end
     return server
   end
@@ -65,7 +66,9 @@ class JenkinsController < MVCLI::Controller
         end
       end
     rescue
-      if retried + 1 < 3
+      puts "jabberwocky #{retried} times"
+      puts retried
+      if retried + 1 < 8
         retried += 1
         sleep(1)
         retry

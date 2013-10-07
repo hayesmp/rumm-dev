@@ -18,3 +18,5 @@ tmp
 .idea/
 test
 .DS_Store
+.vagrant/machines/default/virtualbox/id
+Vagrantfile
