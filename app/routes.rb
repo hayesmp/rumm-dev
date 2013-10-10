@@ -17,6 +17,7 @@ match 'destroy server :id' => 'servers#destroy'
 
 match 'railsify server :id' => 'railsifications#create'
 match 'install jenkins on server :id' => 'jenkins#create'
+match 'create job on jenkins server :id' => 'jobs#create'
 
 match 'show loadbalancers' => 'loadbalancers#index'
 match 'show loadbalancer :id' => 'loadbalancers#show'

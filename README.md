@@ -42,13 +42,15 @@ For further help, including a full listing of commands, type:
   and given a git repository to pull from when a webhook shows a new commit has been made.
   The user will specify a build command.
 
-
   create a server
+
     rumm create server
       created server divine-reef
         id: 52415800-8b69-11e0-9b19-734f565bc83b, password: <password>
 
+
   install Jenkins
+
     rumm install jenkins on server divine-reef --build-command 'bundle exec rake'
       jenkins installed on server divine-reef: 67.23.10.138
 
