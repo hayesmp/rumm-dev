@@ -1,8 +1,6 @@
 class Jenkins::CreateForm < MVCLI::Form
-  requires :naming
 
-  input :git_repo, String, default: 'https://github.com/hayesmp/railsgirls-app.git'
-  input :command, String, default: 'bundle exec rake'
-  input :job, String, default: 'job1'
+  input :git_name, String, default: 'Jenkins'
+  input :git_email, String, default: 'admin@jenkins.com'
 
 end
