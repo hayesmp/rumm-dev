@@ -1,5 +1,6 @@
 require "tmpdir"
 require "open3"
+require "bundler"
 
 class RailsificationsController < MVCLI::Controller
   requires :compute
@@ -18,7 +19,7 @@ class RailsificationsController < MVCLI::Controller
         f.puts 'gem "knife-solo", ">= 0.3.0pre3"'
         f.puts 'gem "berkshelf"'
       end
-      execute "bundle install --binstubs"
+      Bundler.with_clean_env { execute "bundle install --binstubs" }
       execute "bin/knife solo init ."
       File.open 'Berksfile', 'w' do |f|
         f.puts "site :opscode"
@@ -29,13 +30,13 @@ class RailsificationsController < MVCLI::Controller
       execute "bin/berks install --path cookbooks/"
       execute "bin/knife solo prepare root@#{server.ipv4_address}"
       File.open('nodes/host.json', 'w') do |f|
-        f.puts('{"run_list":["rackbox"],"rackbox":{"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195","1.9.3-p448"]},"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"db_root_password":"iloverandompasswordsbutthiswilldo","databases":{"postgresql":[{"database_name":"app1_production","username":"app1","password":"app1_pass"}]}}}')
+        f.puts('{"run_list":["recipe[rackbox]"],"rackbox":{"ruby":{"global_version":"2.0.0-p195","versions":["2.0.0-p195"]},"apps":{"unicorn":[{"appname":"app1","hostname":"app1"}]},"db_root_password":"iloverandompasswordsbutthiswilldo","databases":{"postgresql":[{"database_name":"app1_production","username":"app1","password":"app1_pass"}]}}}')
       end
 
       FileUtils.rm_rf "#{server.ipv4_address}.json"
       FileUtils.mv "nodes/host.json", "nodes/#{server.ipv4_address}.json"
 
-      execute "bin/knife solo cook root@#{server.ipv4_address}"
+      execute "bin/knife solo cook root@#{server.ipv4_address} -V"
     end
     return server
   end
@@ -43,29 +44,15 @@ class RailsificationsController < MVCLI::Controller
   private
 
   def execute(cmd)
-    bundle_clean_env {
-      Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
-        while line = stdout.gets
-          command.output.puts "   " + line
-        end
-        exit_status = wait_thr.value
-        unless exit_status.success?
-          abort "FAILED !!! #{cmd}"
-        end
+    Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
+      while line = stdout.gets
+        command.output.puts "   " + line
       end
-    }
-  end
-
-  def bundle_clean_env
-    gemfile = ENV['BUNDLE_GEMFILE']
-    bin_path = ENV['BUNDLE_BIN_PATH']
-    ENV.delete 'BUNDLE_GEMFILE'
-    ENV.delete 'BUNDLE_BIN_PATH'
-    yield
-  ensure
-    ENV['BUNDLE_GEMFILE'] = gemfile
-    ENV['BUNDLE_BIN_PATH'] = bin_path
-    true
+      exit_status = wait_thr.value
+      unless exit_status.success?
+        abort "FAILED !!! #{cmd}"
+      end
+    end
   end
 
   def server
