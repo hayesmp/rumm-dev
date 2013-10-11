@@ -59,7 +59,7 @@ If the command is run with no parameters, it with insert default values for the 
     rumm create job on server :id --job_name rails-girls-job --job_repo https://github.com/hayesmp/railsgirls-app.git --job_command rake
 
       Setting up new jenkins job: rails-girls-job on server: jenkins-server.
-      jenkins created job: rails-girls-job on server jenkins-server. Repo: https://github.com/hayesmp/railsgirls-app.git, Command: rake
+      new jenkins job created on server jenkins-server: 192.237.240.111
 
 ###Note: the Git repository must be in the `https` url format.
 
@@ -71,3 +71,14 @@ If you setup a webhook with Github, all you need to do now is push to your repos
 
 While not strictly necessary to control jenkins, you might want to change or add settings, see why builds failed, do other stuff.
 
+In your web browser, head to:
+
+    http://192.237.240.111:8080
+
+##Setting Up Email Notification
+
+You may wish to setup an email so you can be notified of a build failure.
+
+Head over to the jenkins configuration page: `Jenkins -> Manage Jenkins -> Configure System` or head to `http://192.237.240.111:8080/configure`.
+
+Near the bottom of the page, head to the section `E-mail Notification` and enter smtp information and an email address.
