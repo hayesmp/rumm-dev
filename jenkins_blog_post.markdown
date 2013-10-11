@@ -61,7 +61,7 @@ If the command is run with no parameters, it with insert default values for the 
       Setting up new jenkins job: rails-girls-job on server: jenkins-server.
       new jenkins job created on server jenkins-server: 192.237.240.111
 
-###Note: the Git repository must be in the `https` url format.
+####Note: the Git repository must be in the `https` url format.
 
 #Useage
 
