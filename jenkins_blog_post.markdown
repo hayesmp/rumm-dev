@@ -59,7 +59,7 @@ If the command is run with no parameters, it with insert default values for the 
     rumm create job on server :id --job_name rails-girls-job --job_repo https://github.com/hayesmp/railsgirls-app.git --job_command rake
 
       Setting up new jenkins job: rails-girls-job on server: jenkins-server.
-      jenkins created job: rails-girls-job on server jenkins-server. Repo: https://github.com/hayesmp/railsgirls-app.git, Command: rake
+      new jenkins job created on server jenkins-server: 192.237.240.111
 
 ###Note: the Git repository must be in the `https` url format.
 
