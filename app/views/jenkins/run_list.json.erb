@@ -1,0 +1,42 @@
+/* Jenkinsbox Runlist */
+{
+  "run_list": [
+    "recipe[build-essential]",
+    "recipe[jenkinsbox::postgresql]",
+    "recipe[jenkinsbox]",
+    "recipe[jenkinsbox::jenkins]"
+  ],
+  "jenkinsbox": {
+    "build_essential": {
+      "compiletime": true
+    },
+    "jenkins": {
+      "git_name": "<%= @git_name %>",
+      "git_email": "<%= @git_email %>"
+    },
+    "ruby": {
+      "versions": [
+        "2.0.0-p247"
+      ],
+      "global_version": "2.0.0-p247"
+    },
+    "apps": {
+      "unicorn": [
+        {
+          "appname": "app1",
+          "hostname": "app1"
+        }
+      ]
+    },
+    "db_root_password": "iloverandompasswordsbutthiswilldo",
+    "databases": {
+      "postgresql": [
+        {
+          "database_name": "app1_production",
+          "username": "app1",
+          "password": "app1_pass"
+        }
+      ]
+    }
+  }
+}
