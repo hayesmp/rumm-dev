@@ -20,6 +20,8 @@ match 'install jenkins on server :id' => 'jenkins#create'
 match 'create job on jenkins server :id' => 'jobs#create'
 match 'install usergrid on server :id' => 'usergrids#create'
 match 'initialize db on usergrid server :id' => 'usergrids#update'
+match 'create organization on usergrid server :id' => 'usergridorgs#create'
+match 'create application on usergrid server :id' => 'usergridapps#create'
 
 match 'show loadbalancers' => 'loadbalancers#index'
 match 'show loadbalancer :id' => 'loadbalancers#show'
