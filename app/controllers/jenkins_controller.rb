@@ -13,7 +13,7 @@ class JenkinsController < MVCLI::Controller
     command.output.puts "Setting up a chef kitchen in order to install jenkins on your server."
     command.output.puts "This could take a while...."
     sleep(1)
-    chef_server = chefsolo.pipeline(server, "jenkinsbox", "hayesmp/jenkins-rackbox-cookbook", load_runlist(form.git_name, form.git_email))
+    chef_server = chefsolo.pipeline(server, [{:name=>"jenkinsbox", :repo=>"hayesmp/jenkins-rackbox-cookbook"}], load_runlist(form.git_name, form.git_email))
     return chef_server
   end
 

@@ -10,7 +10,7 @@ class RailsificationsController < MVCLI::Controller
     command.output.puts "Setting up a chef kitchen in order to railsify your server."
     command.output.puts "This could take a while...."
     sleep(1)
-    chef_server = chefsolo.pipeline(server, "rackbox", "hayesmp/rackbox-cookbook", load_runlist)
+    chef_server = chefsolo.pipeline(server, [{:name=>"rackbox", :repo=>"hayesmp/rackbox-cookbook"}], load_runlist)
     return chef_server
   end
 
