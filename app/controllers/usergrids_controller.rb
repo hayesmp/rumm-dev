@@ -1,5 +1,6 @@
 require 'erubis'
 require 'net/http'
+require 'net/ssh'
 require 'uri'
 
 class UsergridsController < MVCLI::Controller
@@ -23,6 +24,9 @@ class UsergridsController < MVCLI::Controller
 
   def update
     command.output.puts "Initializing cassandra database..."
+    Net::SSH.start("#{server.ipv4_address}", "root") do |ssh|
+      ssh.exec! "/var/chef/cache/dsc-cassandra-1.1.11/bin/cassandra"
+    end
     uri = URI.parse("http://#{server.ipv4_address}:8080/system/database/setup")
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Get.new(uri.request_uri)

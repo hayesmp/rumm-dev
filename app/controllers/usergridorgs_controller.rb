@@ -18,7 +18,7 @@ class UsergridorgsController < MVCLI::Controller
                             "username" => @form.admin_username, "email" => @form.admin_email,
                             "password" => @form.admin_password})
     response = http.request(request)
-    #command.output.puts response.body.inspect
+    command.output.puts response.body
     command.output.puts "Organization: #{@form.org_name}"
     command.output.puts "Admin Name: #{@form.admin_name}"
     command.output.puts "Admin Username: #{@form.admin_username}"

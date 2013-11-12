@@ -13,10 +13,12 @@ class UsergridappsController < MVCLI::Controller
     argv = MVCLI::Argv.new command.argv
     form = template.new argv.options
     command.output.puts "Creating application on Usergrid server..."
+    Usergrid::LOG.level = Logger::WARN
     management = Usergrid::Management.new "http://#{server.ipv4_address}:8080"
     management.login form.admin_username, form.admin_password
     organization = management.organization form.org_name
     #fail organization.response.inspect
+    Usergrid::LOG.level = Logger::DEBUG
     begin
       organization.create_application form.app_name
       #command.output.puts application.inspect
