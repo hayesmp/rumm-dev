@@ -8,7 +8,7 @@ The Rumm Jenkins tool `install jenkins on server :id` sets up Jenkins on the ser
 
 This tool is primarily designed to work with Ruby or Rails projects. When you create a job, you can specify a command, otherwise `rake` will run as the default.
 
-#Installation
+##Installation
 
 First we'll create a new Rackspace server instance:
 
@@ -30,7 +30,7 @@ Then we'll setup jenkins on the server:
       jenkins installed on server jenkins-server: 192.237.240.111
 
 This process will take about 10 minutes.
-###Note: You can set your git credentials by passing 'git-name' and 'git-email' with this command. Otherwise your name and email will be set to [Jenkins, admin@jenkins.com].
+####Note: You can set your git credentials by passing 'git-name' and 'git-email' with this command. Otherwise your name and email will be set to [Jenkins, admin@jenkins.com].
 
     rumm install jenkins on server jenkins-server --git_name Grover Cleveland --git_email grover@whitehouse.gov
 
