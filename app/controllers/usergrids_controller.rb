@@ -32,6 +32,7 @@ class UsergridsController < MVCLI::Controller
     request = Net::HTTP::Get.new(uri.request_uri)
     request.basic_auth("admin", "admin_pass")
     response = http.request(request)
+    command.output.puts response.body
     if response.code == "200"
       return server
     else
