@@ -1,3 +1,8 @@
+The instructions below document the steps to using the Rumm Usergrid provisioning commands now part of the the Rumm command line tool.
+
+The CL tool works in conjunction with the iOS sample app to demonstrate how easily a Usergrid server can be setup and how a simple iOS can send to and receive data from it.
+
+
 ## Using the Rumm Usergrid plug-in
 
 The Rumm Usergrid plugin is designed to quickly and easily spin up a backend server for a mobile app.
