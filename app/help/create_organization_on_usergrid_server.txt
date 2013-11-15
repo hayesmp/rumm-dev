@@ -1,0 +1,20 @@
+Usage:
+    rumm create organization on usergrid server id [--org_name STRING] [--admin_username STRING] [--admin_name STRING] \n
+                                                   [--admin_email STRING] [--admin_password STRING]
+
+Options:
+    --org_name, STRING              # Organization Name, default: 'my_organization'
+    --admin_username, STRING        # Admin Username, default: 'my_org_admin'
+    --admin_name, STRING            # Admin Name, default: 'MyOrgAdmin'
+    --admin_email, STRING           # Admin Email, default: 'my_org_admin@usergrid.com'
+    --admin_password, STRING        # Admin Password, default: 'admin_pass'
+
+Arguments:
+    ID: STRING                      # Name of the server to install jenkins on
+
+Description:
+    This command creates an organization on your Usergrid server. Multiple can be created.
+
+Examples:
+    rumm create organization on usergrid server sorrel-shantung --org_name the_whitehouse --admin_password dsjdsgdf0ff1
+    rumm create organization on usergrid server sorrel-shantung --admin_password somethingLongAndComplicated

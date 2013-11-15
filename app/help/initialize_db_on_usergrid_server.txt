@@ -1,0 +1,13 @@
+Usage:
+    rumm initialize db on usergrid server id
+
+Options:
+
+Arguments:
+    ID: STRING                      # Name of the server to install jenkins on
+
+Description:
+    This command initializes the Cassandra database on the Usergrid server.
+
+Examples:
+    rumm initialize db on usergrid server sorrel-shantung

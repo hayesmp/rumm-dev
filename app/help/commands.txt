@@ -21,6 +21,12 @@ Jenkins:
     rumm install jenkins on server :id
     rumm create job on jenkins server :id
 
+Usergrid:
+    rumm setup usergrid server :id
+    rumm initialize db on usergrid server :id
+    rumm create organization on usergrid server :id
+    rumm create application on usergrid server :id
+
 Loadbalancers:
     rumm show loadbalancers
     rumm show loadbalancer :id

@@ -1,0 +1,18 @@
+Usage:
+    rumm create organization on usergrid server id [--org_name STRING] [--app_name STRING] [--admin_username STRING] [--admin_password STRING]
+
+Options:
+    --org_name, STRING              # Organization Name, default: 'my_organization'
+    --app_name, STRING              # Application Name, default: 'my_app'
+    --admin_username, STRING        # Admin Username, default: 'my_org_admin'
+    --admin_password, STRING        # Admin Password, default: 'admin_pass'
+
+Arguments:
+    ID: STRING                      # Name of the server to install jenkins on
+
+Description:
+    This command creates an application on your Usergrid server. Multiple can be created.
+    `create application` requires you enter a valid organization and admin credentials.
+
+Examples:
+    rumm create application on usergrid server sorrel-shantung --org_name the_whitehouse --app_name fbi_gov --admin_username admin --admin_password dsjdsgdf0ff1

@@ -22,8 +22,14 @@ help('update server')
 help('destroy server')
 
 help('railsify server')
+
 help('install jenkins on server')
 help('create job on jenkins server')
+
+help('setup usergrid server')
+help('initialize db on usergrid server')
+help('create organization on usergrid server')
+help('create application on usergrid server')
 
 help('show loadbalancers')
 help('show loadbalancer')
